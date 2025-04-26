@@ -58,7 +58,7 @@ def rental_service():
             cow = cows.pop() # IM - pop the least productive for rental instead
             print(f"cow: {cow}; rental: {value_rental}")
     
-    print(total)
+    print(total, file=open("output", "w"))
     '''
     input:
     cows = deque([7, 6, 4, 2, 1])
@@ -73,12 +73,6 @@ def rental_service():
     cow: 4; rental: 80
     total = 725
     '''
-    return total
-
-
-
-        
-
 
 if __name__ == "__main__":
     rental_service()

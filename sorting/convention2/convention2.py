@@ -60,8 +60,16 @@ def convention2():
 
     print(max_wait, file=open("output", "w"))
 
+if __name__ == "__main__":
+    convention2()
 
-def convention2_solution(cows_in):
+
+
+
+
+
+# This is the official solution which was used as a benchmark for correctness checking
+def convention2_official_solution(cows_in):
     cows = []
     with open("convention2.in") as read:
         for c in range(int(read.readline())):
@@ -97,8 +105,4 @@ def convention2_solution(cows_in):
             time += next_cow[2]
 
     print(longest_wait, file=open("convention2.out", "w"))
-
-if __name__ == "__main__":
-    convention2()
-
 

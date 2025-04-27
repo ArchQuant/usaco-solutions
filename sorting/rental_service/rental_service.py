@@ -17,6 +17,8 @@ def rental_service():
         cows = [int(r.readline()) for _ in range(n_cows)]
         # IM - unpack "10 15" into Store(10, 15)
         stores = [Store(*map(int, r.readline().split())) for _ in range(n_stores)]
+        # Wrong: cannot unpack a list [q, p] using q, p. Also, in r.readline().split will loop through q, then p.
+        # stores = [Store(int(q), int(p)) for q, p in r.readline().split() for _ in range(n_stores)]
         rentals = [int(r.readline()) for _ in range(n_rentals)]
 
     # IM - if the most productive cow makes more in milking over rental
@@ -48,7 +50,8 @@ def rental_service():
         if value_milk > value_rental or not rentals:
             total += value_milk
             # update states after milking, using idx and residue
-            [stores.popleft() for _ in range(idx)]
+            for _ in range(idx):
+                stores.popleft() 
             stores[0].q -= residue
             cows.popleft() # pop the most productive for milking
             print(f"cow: {cow}; milk: {value_milk}")

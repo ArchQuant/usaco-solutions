@@ -20,7 +20,7 @@ def diamond_collector():
     for i in range(n-1, -1, -1):
         suffix_max[i] = max(suffix_max[i+1], amt[i])
     max_display = 0
-    # scan all items, skip the removed item and get the nex suffix max
+    # try each ith items, skip the removed items and get the next suffix max
     for i in range(n):
         max_display = max(max_display, amt[i] + suffix_max[i+amt[i]])
     

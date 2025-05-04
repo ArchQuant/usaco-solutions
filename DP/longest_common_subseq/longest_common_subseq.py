@@ -17,3 +17,7 @@ def longestCommonSubsequence(text1: str, text2: str) -> int:
                 dp[row][col] = max(dp[row + 1][col], dp[row][col + 1])
     
     return dp[0][0]
+
+text1 = "actgattag"
+text2 = "gtgtgatcg"
+print(longestCommonSubsequence(text1, text2))

@@ -2,18 +2,31 @@ import sys
 sys.stdin = open("input", "r")
 
 n = int(input())
+s = [list(input()) for _ in range(n)]
+t = [list(input()) for _ in range(n)]
 
-s = [[None] * n for _ in range(n)]
-t = [[None] * n for _ in range(n)]
+def rotate_clockwise(board):
+    # IM- [::-1] reverse all rows from row[-1] -> row[0]
+    # then take the first element of each
+    return [list(row) for row in zip(*board[::-1])]
 
-for i in range(n):
-    s[i] = list(input())
-for i in range(n):
-    t[i] = list(input())
+min_op = float('inf')
+for k in range(4): # IM - keep track of rotation times
+    op_count = k
+    # IM - use sum for clarity
+    op_count += sum(1 for i in range(n) for j in range(n) if s[i][j] != t[i][j])
+    min_op = min(min_op, op_count)
+    # IM - two types of op, only change s for rotation, don't switch char
+    s = rotate_clockwise(s)
+print(min_op)
 
-s_rot = [s] # IM
+'''
+# More verbose version:
+s_rot = [s] # IM - zero rotation -> original s
 all_counts = []
-for k in range(1, 4): # IM
+
+# IM - the two loops below are both 4, so can combine
+for k in range(1, 4): # IM - skip the initial one
     s_rot.append([[s_rot[k-1][n-1-j][i] for j in range(n)] for i in range(n)]) # IM
 for k in range(len(s_rot)):
     op_count = k
@@ -26,6 +39,12 @@ for k in range(len(s_rot)):
 print(min(all_counts))
 
 '''
+'''
+IM - Don't use BFS for this case.
+Because (rotation + change char) are not equivalent operations.
+Rotation is at most three times. More rotation will just repeat.
+
+
 op_count = 0
 
 from collections import deque

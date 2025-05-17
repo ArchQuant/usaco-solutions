@@ -1,43 +1,46 @@
 with open("input", "r") as f:
     cow_num, wormhole_num = map(int, f.readline().split())
-    cows = list(map(lambda x: int(x)-1, f.readline().split())) # 0-index
+    cow_pos = list(map(lambda x: int(x)-1, f.readline().split())) # 0-index
 
-    neighbors = [[] for _ in range(cow_num)]
+    adj = [[] for _ in range(cow_num)]
     max_width = 0
     for _ in range(wormhole_num):
-        c1, c2, width = map(int, f.readline().split())
-        c1 -= 1
-        c2 -= 1
-        neighbors[c1].append((c2, width))
-        neighbors[c2].append((c1, width))
+        u, v, width = map(int, f.readline().split())
+        u -= 1
+        v -= 1
+        adj[u].append((v, width))
+        adj[v].append((u, width))
         max_width = max(max_width, width)
 
 lo = 0
 hi = max_width + 1
 valid = -1
 
+# iterative DFS: flood color to group the connected pos
+# alternatives: Union Find
+def dfs(start, comp_id, component, adj, min_width):
+    stack = [start]
+    while stack:
+        curr = stack.pop()
+        if component[curr] != -1: # not colored yet
+            continue
+        component[curr] = comp_id
+        stack.extend(n for n, w in adj[curr] if component[n] == -1 and w >= min_width)
+
+
+# General algo is binary search due to monotonic nature
 while lo <= hi:
     mid = (lo + hi) // 2
     component = [-1] * cow_num
-    curr_comp = 0
+    comp_id = 0
 
     for i in range(cow_num):
         if component[i] != -1:
             continue
-        stack = [i]
-        while stack:
-            curr = stack.pop()
-            if component[curr] != -1:
-                continue
-            component[curr] = curr_comp
-            for neighbor, width in neighbors[curr]:
-                if component[neighbor] == -1 and width >= mid:
-                    stack.append(neighbor)
-        curr_comp += 1
+        dfs(i, comp_id, component, adj, mid)
+        comp_id += 1
 
-    sortable = all(component[i] == component[cows[i]] for i in range(cow_num))
-
-    if sortable:
+    if all(component[i] == component[cow_pos[i]] for i in range(cow_num)):
         valid = mid
         lo = mid + 1
     else:

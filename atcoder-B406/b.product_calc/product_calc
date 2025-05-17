@@ -1,0 +1,14 @@
+import sys
+sys.stdin = open("inpt", "r")
+
+n, k = [int(i) for i in input().split()]
+arr = [int(i) for i in input().split()]
+
+p = 1
+limit = 10 ** k
+for a in arr:
+    if p * a >= limit: 
+        p = 1
+    else:
+        p *= a
+print(p)

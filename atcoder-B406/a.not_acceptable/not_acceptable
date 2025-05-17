@@ -1,0 +1,10 @@
+import sys
+sys.stdin = open("input", "r")
+
+
+a, b, c, d = [int(i) for i in input().split()]
+
+if c == a:
+    print("Yes" if d < b else "No")
+else:
+    print("Yes" if c < a else "No")

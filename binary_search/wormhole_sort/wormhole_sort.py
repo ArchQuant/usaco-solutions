@@ -16,13 +16,13 @@ lo = 0
 hi = max_width + 1
 valid = -1
 
-# iterative DFS: flood color to group the connected pos
+# iterative DFS: floodfill color to group the connected pos
 # alternatives: Union Find
 def dfs(start, comp_id, component, adj, min_width):
-    stack = [start]
+    stack = [start] # dfs uses stack and pop (not popleft)
     while stack:
         curr = stack.pop()
-        if component[curr] != -1: # not colored yet
+        if component[curr] != -1: # already colored, skip
             continue
         component[curr] = comp_id
         stack.extend(n for n, w in adj[curr] if component[n] == -1 and w >= min_width)

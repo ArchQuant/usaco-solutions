@@ -7,31 +7,32 @@ A = [list(map(int, input().split())) for _ in range(H)]
 
 # all possible ways of placing any number of dominos
 # start with empty grid, represented as 0
-possible_domino = [0]
+all_patterns = [0]
 
 # a piece of domino
 domino_vertical = (1 << W) + 1  # Vertical: two bits apart by W
 domino_horizontal = 3           # Horizontal domino pattern (covers 2 bits)
 
-# Generate all possible domino placements
-bit = 0
+# For each cell, try to place a domino: to the right or down direction
+# Do this for all possible domino placements in an accumulative manner
+bit = 0 # each cell position is marked by bit = W * i + j
 for i in range(H):
     for j in range(W):
         tmp = []
-        for b in possible_domino:
+        for b in all_patterns:
             # domino_horizon is b(11). Use "<< bit" to move bit position
             if j + 1 < W and not (b & (domino_horizontal << bit)):
                 tmp.append(b | (domino_horizontal << bit)) # add a domino
             # Check if a vertical domino can be placed
             if i + 1 < H and not (b & (domino_vertical << bit)):
                 tmp.append(b | (domino_vertical << bit))
-        # Update possible_domino with new placements
-        possible_domino.extend(tmp)
+        # Update all_patterns with new placements
+        all_patterns.extend(tmp)
         bit += 1
 
 # Compute maximum XOR of uncovered cells
 ans = 0
-for b in possible_domino:
+for b in all_patterns:
     now = 0
     bit = 0
     for i in range(H):

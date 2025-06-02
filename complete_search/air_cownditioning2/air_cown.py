@@ -14,7 +14,9 @@ for _ in range(m):
     a, b, p, c = [int(i) for i in input().split()]
     ac.append((a, b, p, c))
 
-# IM: use dfs to find all subsets of ac choices
+# IM: checkout method2 below!!
+
+# method1: use dfs to find all subsets of ac choices
 # ac is numbered [0, 1, 2, ..., m], dfs generates all subsets of ac
 def dfs(i, cur, arr, arrs):
     if i == m:
@@ -52,5 +54,52 @@ for arr in arrs:
     if is_valid(arr):
         cost = sum(ac[i][3] for i in arr)
         min_cost = min(min_cost, cost)
+
+print(min_cost)
+
+
+# method2: bitmask
+from typing import NamedTuple
+
+MAX_STALL = 100
+# typing.NamedTuple for immutable data class
+class Cow(NamedTuple):
+	start: int
+	end: int
+	cool_req: int
+
+class AC(NamedTuple):
+	start: int
+	end: int
+	cool_amt: int
+	cost: int
+
+cow_num, ac_num = [int(i) for i in input().split()]
+# IM: use NamedTuple for cleanness
+cows = [Cow(*[int(i) for i in input().split()]) for _ in range(cow_num)]
+acs = [AC(*[int(i) for i in input().split()]) for _ in range(ac_num)]
+
+min_cost = float("inf")
+# IM: bitmask iterates over all possible ac scenarios, instead of dfs
+for mask in range(1 << ac_num):
+	stalls = [0 for _ in range(MAX_STALL + 1)]
+
+	cost = 0
+	for v, a in enumerate(acs):
+		if mask & (1 << v):
+			for i in range(a.start, a.end + 1):
+				stalls[i] += a.cool_amt # accumulate all cool_amt
+			cost += a.cost
+
+	valid = True
+	for c in cows:
+		for i in range(c.start, c.end + 1):
+			if stalls[i] < c.cool_req: # check each disjoint c
+				valid = False
+				break
+		if not valid:
+			break
+	else:
+		min_cost = min(min_cost, cost)
 
 print(min_cost)

@@ -85,11 +85,11 @@ for mask in range(1 << ac_num):
 	stalls = [0 for _ in range(MAX_STALL + 1)]
 
 	cost = 0
-	for v, a in enumerate(acs):
+	for v, a in enumerate(acs): # use enumerate to get v, the index of ac
 		if mask & (1 << v):
 			for i in range(a.start, a.end + 1):
 				stalls[i] += a.cool_amt # accumulate all cool_amt
-			cost += a.cost
+			cost += a.cost # in the meantime, sum up the cost
 
 	valid = True
 	for c in cows:

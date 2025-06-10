@@ -39,20 +39,21 @@ for a, b, milk in queries:
 
 
 # method 2: iterative DFS
+print("\nmethod 2")
 component_num = 0
 component = [-1 for _ in range(farm_num)]
 for f in range(farm_num):
-	if component[f] != -1:
-		continue
-	stack = [f]
-	curr_type = farms[f]
-	while stack:
-		curr = stack.pop()
-		component[curr] = component_num
-		for n in neighbors[curr]:
-			if farms[n] == curr_type and component[n] == -1:
-				stack.append(n)
-	component_num += 1
+    if component[f] != -1:
+        continue
+    stack = [f]
+    curr_type = farms[f]
+    while stack:
+        curr = stack.pop()
+        component[curr] = component_num
+        for n in neighbors[curr]:
+            if farms[n] == curr_type and component[n] == -1:
+                stack.append(n)
+    component_num += 1
 
 for a, b, milk in queries:
     if component[a] == component[b]:

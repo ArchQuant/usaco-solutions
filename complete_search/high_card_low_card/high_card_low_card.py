@@ -6,6 +6,7 @@ elsie = [int(input()) for i in range(N)]
 set_elsie = set(elsie) # use set for fast "in"
 bessie = [i for i in range(1, 2 * N + 1) if i not in set_elsie] # IM get bessies
 
+# IM: figure out a strategy first, then manipulate the data for easy execution.
 # IM: sort, for easy execution of strategy
 # IM: high-half: reverse sort, max first, for easy compare
 elsie_high = sorted(elsie[: N // 2], reverse=True)

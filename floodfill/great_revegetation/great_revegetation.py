@@ -10,6 +10,7 @@ for _ in range(m):
     type_, u, v = input().split()
     u, v = int(u) - 1, int(v) - 1
     same = (type_ == 'S')
+    # IM: add a state param
     adj[u].append((v, same))
     adj[v].append((u, same))
 
@@ -19,7 +20,7 @@ color = [-1] * n  # -1 means unvisited
 
 # IM: imagine the picture of a simple component, swap the two type of grass is still valid
 # then the problem reduced to "count how many connected components"
-# IM: note that this could be  impossible
+# IM: note that there could be impossible scenarios
 for i in range(n):
     if color[i] == -1:
         component_num += 1

@@ -1,10 +1,6 @@
 import sys
 sys.stdin = open("input", "r")
 
-sys.setrecursionlimit(int(1e9))
-import functools
-
-
 N, H, M = [int(i) for i in input().split()]
 A = []
 B = []
@@ -13,33 +9,36 @@ for i in range(N):
     A.append(a)
     B.append(b)
 
-# IM: dp[i][m] is the max health after i-th monster, with magic power m
-dp = [-1] * (M + 1)
-dp[M] = H  # Start with full health and magic
-
-max_defeated = 0
+# IM: dp[i][h] is the max magic after i-th monster, with h health
+# 1. H first, N second loop; 2. padding for initial state
+dp = [[-1] * (H + 1) for _ in range(N + 1)] 
+# boundary
+dp[0][H] = M  # Start with full health and magic
+max_defeat = 0
 
 for i in range(N):
-    next_dp = [-1] * (M + 1)
-    for m in range(M + 1):
-        if dp[m] >= 0:
-            # Option 1: Use health if possible
-            if dp[m] >= A[i]:
-                next_dp[m] = max(next_dp[m], dp[m] - A[i])
-            # Option 2: Use magic if possible
-            if m >= B[i]:
-                next_dp[m - B[i]] = max(next_dp[m - B[i]], dp[m])
-    if max(next_dp) < 0:
-        break
-    dp = next_dp
-    max_defeated += 1
+    for h in range(H + 1):
+        # at initial, can only have H and M
+        # then one-by-one monster
+        if dp[i][h] == -1:
+            continue
+        m = dp[i][h]
+        # Option 1: Fight using magic
+        if m >= B[i]:
+            dp[i + 1][h] = max(dp[i + 1][h], m - B[i])
+            max_defeat = max(max_defeat, i + 1)
+        # Option 2: Fight using health
+        if h >= A[i]:
+            dp[i + 1][h - A[i]] = max(dp[i + 1][h - A[i]], m)
+            max_defeat = max(max_defeat, i + 1)
 
-print(max_defeated)
-
-# dp = [[-1] * N for _ in range(M)]
-
+print(max_defeat)
 
 
+
+
+sys.setrecursionlimit(int(1e9))
+import functools
 
 # Exceed time limit: need to switch to bitset
 # IM: dp is the max of the following max, not the previous max

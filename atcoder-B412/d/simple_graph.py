@@ -1,7 +1,54 @@
 import sys
-
 sys.stdin = open("input","r")
 
+from itertools import permutations
+
+n, m = [int(i) for i in input().split()]
+edges = []
+    
+f = [[False]*n for _ in range(n)]
+for i in range(m):
+    u, v = [int(i)-1 for i in input().split()]
+    if u > v:
+        u, v = v, u
+    f[u][v] = True
+
+ans = 100
+for a in permutations(range(n)):
+    # Cycle * 1
+    g = [[False]*n for _ in range(n)]
+    for i in range(n):
+        u, v = a[i], a[(i + 1) % n]
+        if u > v:
+            u, v = v, u
+        g[u][v] = True
+    c0 = sum(f[i][j] != g[i][j] for i in range(n) for j in range(n))
+    ans = min(ans, c0)
+
+    # Cycle * 2
+    for d in range(3, n - 2 + 1):
+        h = [[False]*n for _ in range(n)]
+        # First cycle of size d
+        for i in range(d):
+            u, v = a[i], a[(i + 1) % d]
+            if u > v:
+                u, v = v, u
+            h[u][v] = True
+        # Second cycle of size n - d
+        for i in range(n - d):
+            idx1 = i + d
+            idx2 = (i + 1) % (n - d) + d
+            u, v = a[idx1], a[idx2]
+            if u > v:
+                u, v = v, u
+            h[u][v] = True
+        c1 = sum(f[i][j] != h[i][j] for i in range(n) for j in range(n))
+        ans = min(ans, c1)
+
+print(ans)
+
+
+""" ETL
 from itertools import combinations
 def edge_id(u, v, N):
     if u > v:
@@ -45,3 +92,4 @@ for valid in valid_graphs:
 
 print(min_ops)
 
+"""

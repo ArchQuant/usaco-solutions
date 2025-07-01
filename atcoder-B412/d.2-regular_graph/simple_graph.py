@@ -14,7 +14,9 @@ for i in range(m):
     f[u][v] = True
 
 ans = 100
-for a in permutations(range(n)):
+# IM: 2-regular graph means must be cycle/cycles
+# total 8 vertex, so max 2 cycles
+for a in permutations(range(n)): # this is the sequence of the cycle vertex
     # Cycle * 1
     g = [[False]*n for _ in range(n)]
     for i in range(n):
